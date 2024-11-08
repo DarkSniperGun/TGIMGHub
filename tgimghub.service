@@ -5,8 +5,8 @@ Wants=network.target
 
 [Service]
 User=xxx
-Type=simple
-ExecStart=/usr/bin/python3  path_to/main.py
+WorkingDirectory=/home/用户名/code/TgImgHub
+ExecStart=/usr/bin/python3  /home/用户名/code/TgImgHub/main.py
 Restart=always
 RestartSec=10
 
