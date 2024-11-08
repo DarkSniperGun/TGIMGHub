@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TG-IMG-Hub</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="upload-container">
+        <div class="password-input">
+            <input type="password" id="uploadPassword" placeholder="请输入上传密码">
+        </div>
+
+        <div class="upload-area" id="uploadArea">
+            <p>点击或拖拽图片到此处上传</p>
+            <input type="file" id="fileInput" style="display: none" accept="image/*">
+        </div>
+
+        <div class="telegram-group">
+            <a href="https://t.me/TGIMGHub" target="_blank">
+                <img src="https://telegram.org/img/t_logo.png" alt="Telegram" width="20">
+                加入交流群 https://t.me/TGIMGHub
+            </a>
+        </div>
+
+        <div class="result-container" id="resultContainer">
+            <div class="url-group">
+                <div class="url-label">直接链接</div>
+                <div class="url-content">
+                    <input type="text" class="url-text" id="directUrl" readonly>
+                    <button class="copy-btn" onclick="copyText('directUrl')">复制</button>
+                </div>
+            </div>
+
+            <div class="url-group">
+                <div class="url-label">HTML 图片标签</div>
+                <div class="url-content">
+                    <input type="text" class="url-text" id="htmlUrl" readonly>
+                    <button class="copy-btn" onclick="copyText('htmlUrl')">复制</button>
+                </div>
+            </div>
+
+            <div class="url-group">
+                <div class="url-label">Markdown 格式</div>
+                <div class="url-content">
+                    <input type="text" class="url-text" id="markdownUrl" readonly>
+                    <button class="copy-btn" onclick="copyText('markdownUrl')">复制</button>
+                </div>
+            </div>
+
+            <img id="previewImage" class="preview-image">
+        </div>
+    </div>
+
+    <style>
+        .telegram-group {
+            text-align: center;
+            margin: 15px 0;
+            padding: 10px;
+        }
+        
+        .telegram-group a {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background-color: #2AABEE;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+        
+        .telegram-group a:hover {
+            background-color: #229ED9;
+        }
+        
+        .telegram-group img {
+            vertical-align: middle;
+        }
+        
+        .password-input {
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .password-input input {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            width: 200px;
+            font-size: 14px;
+        }
+        
+        .password-input input:focus {
+            outline: none;
+            border-color: #2AABEE;
+        }
+    </style>
+
+    <script>
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+        const resultContainer = document.getElementById('resultContainer');
+
+        // 处理拖拽上传
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                handleUpload(files[0]);
+            }
+        });
+
+        // 处理点击上传
+        uploadArea.addEventListener('click', () => {
+            fileInput.click();
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                handleUpload(e.target.files[0]);
+            }
+        });
+
+        // 上传处理函数
+        async function handleUpload(file) {
+            const formData = new FormData();
+            formData.append('file', file);
+
+            // 获取密码
+            const password = document.getElementById('uploadPassword').value;
+            
+            // 显示上传状态
+            uploadArea.innerHTML = '<p>正在上传...</p>';
+
+            try {
+                console.log('开始上传文件');
+                const response = await fetch('/upload/', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${password}`
+                    },
+                    body: formData
+                });
+
+                console.log('服务器响应状态:', response.status);
+                
+                if (response.status === 401) {
+                    throw new Error('需要密码');
+                }
+                
+                if (response.status === 403) {
+                    throw new Error('密码错误');
+                }
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                // 直接使用 response.json() 而不是 text() 然后 parse
+                const data = await response.json();
+                console.log('服务器响应数据:', data);
+
+                // 显示结果
+                document.getElementById('directUrl').value = data.url;
+                document.getElementById('htmlUrl').value = `<img src="${data.url}" alt="image">`;
+                document.getElementById('markdownUrl').value = `![image](${data.url})`;
+                document.getElementById('previewImage').src = data.url;
+                resultContainer.style.display = 'block';
+
+                // 重置上传区域
+                uploadArea.innerHTML = '<p>点击或拖拽图片到此处上传</p>';
+
+            } catch (error) {
+                console.error('上传错误:', error);
+                uploadArea.innerHTML = `<p style="color: red;">上传失败: ${error.message}</p>`;
+                setTimeout(() => {
+                    uploadArea.innerHTML = '<p>点击或拖拽图片到此处上传</p>';
+                }, 3000);
+            }
+        }
+
+        // 复制文本功能
+        function copyText(elementId) {
+            const element = document.getElementById(elementId);
+            element.select();
+            document.execCommand('copy');
+            
+            const button = element.nextElementSibling;
+            const originalText = button.textContent;
+            button.textContent = '已复制！';
+            setTimeout(() => {
+                button.textContent = originalText;
+            }, 1000);
+        }
+    </script>
+</body>
+</html>           
