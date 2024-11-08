@@ -4,6 +4,7 @@ After=network.target
 Wants=network.target
 
 [Service]
+User=xxx
 Type=simple
 ExecStart=/usr/bin/python3  path_to/main.py
 Restart=always

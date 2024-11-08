@@ -43,6 +43,7 @@ nano config.py
 
 4. 设置系统服务 
 修改里面的path_to/main.py为你项目的路径，可使用`pwd`查看当前路径
+user填你当前的用户名
 ```bash
 nano tgimghub.service
 ```
