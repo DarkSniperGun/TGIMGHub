@@ -1,6 +1,8 @@
+
 # TG IMG Hub
 
 一个基于 Telegram 的图片托管服务，支持拖拽上传、密码保护和自动生成多种格式的图片链接。
+这个项目依赖tg公开频道，建立的图床是无限大的。
 
 ## 特性
 
@@ -12,6 +14,28 @@
 - 🌐 跨平台支持：支持各种图片格式
 
 ## 部署指南
+### 前提
+- 一个tg账号
+- 一个海外vps
+
+#### 申请机器人token寄创建公开频道
+开通Telegram Bot渠道必须：Telegram的TG_BOT_TOKEN和TG_CHAT_ID
+
+首先需要拥有一个Telegram账户，然后按照以下步骤获取TG_BOT_TOKEN和TG_CHAT_ID。
+
+向@BotFather发送/newbot，按照提示输入bot的备注、用户名等信息。成功创建后获得TG_BOT_TOKEN。
+![68747470733a2f2f616c6973742e73616e7975652e736974652f642f696d676265642f3230323430393037313734343536392e706e67](https://hackmd.io/_uploads/rkefg-osZkg.png)
+
+创建一个新的频道（Channel），进入新建的频道，选择频道管理，将刚才创建的机器人设为频道管理员。
+![68747470733a2f2f616c6973742e73616e7975652e736974652f642f696d676265642f3230323430393037313735383739362e706e67](https://hackmd.io/_uploads/rkxQbosZkg.png)
+
+![68747470733a2f2f616c6973742e73616e7975652e736974652f642f696d676265642f3230323431303239313533313437332e706e67](https://hackmd.io/_uploads/HkgdWsjZJg.png)
+
+
+频道设置为公开并记录一下频道链接末尾的名字，如https://t.me/nzjksks 中的nzjksks
+
+![图片](https://hackmd.io/_uploads/HJ2cbjobye.png)
+
 
 ### 环境要求
 
@@ -62,7 +86,7 @@ http://your-Ip::21351
 在 `config.py` 中设置以下参数：
 
 - `BOT_TOKEN`: 你的 Telegram Bot Token
-- `CHANNEL_ID`: 你的公开频道关键字
+- `CHANNEL_ID`: 你的公开频道关键字 如@nzjksks
 - `BASE_URL`: 你的图片服务URL
 - `UPLOAD_PASSWORD`: 上传密码   
 
