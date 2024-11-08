@@ -1,6 +1,6 @@
 
-# TG IMG Hub
-
+# 挂壁TG图床
+适合没钱买OSS，但是又想有个图床的挂壁朋友。
 一个基于 Telegram 的图片托管服务，支持拖拽上传、密码保护和自动生成多种格式的图片链接。
 这个项目依赖tg公开频道，建立的图床是无限大的。
 
@@ -106,25 +106,6 @@ reverse_proxy localhost:21351
 
 ## API 文档
 
-### 上传图片
-
-## 使用方法
-
-1. 访问你的域名
-2. 如果设置了密码，输入上传密码
-3. 拖拽或点击上传图片
-4. 获取生成的图片链接
-
-## API 文档
-
-### 上传图片
-
-## 使用方法
-
-1. 访问你的域名
-2. 如果设置了密码，输入上传密码
-3. 拖拽或点击上传图片
-4. 获取生成的图片链接
 
 ## API 文档
 ### 使用 curl 上传图片
@@ -145,7 +126,7 @@ file: 图片文件
 ```json
 {
 "success": true,
-"url": "https://your.domain.com/image/file_id.jpg",
+"url": "http://your.domain.com/image/file_id.jpg",
 "file_id": "xxx",
 "extension": ".jpg"
 }
@@ -153,8 +134,8 @@ file: 图片文件
 
 
 ### 获取图片
-
-`GET /image/{file_id}{extension}`
+http://your.domain.com/image/{file_id}{extension}
+`GET 链接/image/{file_id}{extension}`
 
 ## 交流群
 
