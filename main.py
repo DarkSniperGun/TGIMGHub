@@ -416,5 +416,5 @@ if __name__ == "__main__":
         app, 
         host="0.0.0.0", 
         port=21351,  # 使用你的端口
-        log_level="debug"
+        log_level="error"
     )
