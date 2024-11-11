@@ -76,7 +76,7 @@ async def upload_image(
                     status_code=401,
                     content={"success": False, "error": "需要密码"}
                 )
-            if authorization != f"Bearer {config.UPLOAD_PASSWORD}":
+            if authorization != config.UPLOAD_PASSWORD:  # 直接比较密码，不需要Bearer前缀
                 return JSONResponse(
                     status_code=403,
                     content={"success": False, "error": "密码错误"}
@@ -348,18 +348,21 @@ async def get_file(file_id: str, filename: str):
                         content_length = len(content)
                         logger.info(f"成功下载文件，大小: {content_length} bytes")
                         
-                        # 设置正确的content type
+                        # 获取文件类型
                         content_type = get_content_type(decoded_filename)
                         logger.info(f"文件类型: {content_type}")
                         
-                        # 修改 Content-Disposition header
+                        # 设置响应头
                         headers = {
                             "Content-Type": content_type,
                             "Content-Length": str(content_length),
-                            "Content-Disposition": f"attachment; filename*=UTF-8''{quote(decoded_filename)}",
                             "Cache-Control": "public, max-age=31536000",
                             "Access-Control-Allow-Origin": "*"
                         }
+                        
+                        # 如果不是图片，添加 Content-Disposition 头以触发下载
+                        if not content_type.startswith('image/'):
+                            headers["Content-Disposition"] = f"attachment; filename*=UTF-8''{quote(decoded_filename)}"
                         
                         return Response(
                             content=content,
@@ -400,8 +403,17 @@ def get_content_type(filename: str) -> str:
     """获取文件的 MIME 类型"""
     content_type, _ = mimetypes.guess_type(filename)
     if not content_type:
-        # 如果无法确定类型，对于二进制文件返回通用二进制类型
-        if filename.endswith(('.exe', '.dll', '.bin')):
+        # 如果是图片文件，返回对应的 MIME 类型
+        if filename.lower().endswith(('.jpg', '.jpeg')):
+            return 'image/jpeg'
+        elif filename.lower().endswith('.png'):
+            return 'image/png'
+        elif filename.lower().endswith('.gif'):
+            return 'image/gif'
+        elif filename.lower().endswith('.webp'):
+            return 'image/webp'
+        # 如果是其他类型文件，返回通用二进制类型
+        elif filename.endswith(('.exe', '.dll', '.bin')):
             return 'application/octet-stream'
         # 对于文本文件返回文本类型
         elif filename.endswith(('.txt', '.log', '.py', '.js', '.html', '.css')):

@@ -151,7 +151,7 @@
                 const response = await fetch('/upload/', {
                     method: 'POST',
                     headers: {
-                        'Authorization': `Bearer ${password}`
+                        'Authorization': password
                     },
                     body: formData
                 });

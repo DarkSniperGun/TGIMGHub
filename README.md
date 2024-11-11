@@ -117,7 +117,7 @@ curl -X POST http://your.domain.com/upload/ -F "file=@path_to/image.jpg"
 
 2. 有密码上传：
 ```bash
-curl -X POST http://your.domain.com/upload/ -F "file=@path_to/image.jpg" -H "Authorization: Bearer your_password"   
+curl -X POST http://your.domain.com/upload/ -F "file=@path_to/image.jpg" -H "Authorization: your_password"   
 
 ```
 参数：
