@@ -87,7 +87,7 @@ http://your-Ip::21351
 
 - `BOT_TOKEN`: 你的 Telegram Bot Token
 - `CHANNEL_ID`: 你的公开频道关键字 如@nzjksks
-- `BASE_URL`: 你的图片服务URL
+- `BASE_URL`: 你的图片服务URL，如https://guabige.com
 - `UPLOAD_PASSWORD`: 上传密码   
 
 ### Caddy 配置
