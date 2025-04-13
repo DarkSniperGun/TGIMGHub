@@ -3,7 +3,7 @@
 适合没钱买OSS，但是又想有个图床的挂壁朋友。
 一个基于 Telegram 的图片托管服务，支持拖拽上传、密码保护和自动生成多种格式的图片链接。
 这个项目依赖tg公开频道，建立的图床是无限大的。
-交流群 https://t.me/nzjksks
+交流群 https/t.me/TGIMGHub
 ## 特性
 
 - 🚀 快速上传：支持拖拽和点击上传
@@ -55,7 +55,7 @@ cd TgImgHub
 2. 安装依赖
 
 ```bash
-pip install -r requirements.txt
+pip install -r requirements.txt --break-system-packages
 ```
 3. 配置服务
 
@@ -134,8 +134,8 @@ file: 图片文件
 
 
 ### 获取图片
-http://your.domain.com/image/{file_id}{extension}
-`GET 链接/image/{file_id}{extension}`
+http://your.domain.com/file/{file_id}{extension}
+`GET 链接/file/{file_id}{extension}`
 
 ## 交流群
 
